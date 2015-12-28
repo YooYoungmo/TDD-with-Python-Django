@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from django.core.urlresolvers import resolve
 from django.http import HttpRequest
 from django.template.loader import render_to_string
@@ -18,3 +20,15 @@ class HomePageTest(TestCase):
         expected_html = render_to_string('home.html')
 
         self.assertEqual(response.content.decode(), expected_html)
+
+    def test_home_page_can_save_a_POST_request(self):
+        # given
+        request = HttpRequest()
+        request.method = 'POST'
+        request.POST['item_text'] = u'신규 작업 아이템'
+
+        # when
+        response = home_page(request)
+
+        # then
+        self.assertIn(u'신규 작업 아이템', response.content.decode('utf-8'))

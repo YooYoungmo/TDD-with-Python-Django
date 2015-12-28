@@ -5,7 +5,11 @@
 </head>
 <body>
 <h1>Your To-Do list</h1>
-<input id="id_new_item" placeholder="작업 아이템 입력"/>
+<form method="post">
+    {% csrf_token %}
+    <input name="item_text" id="id_new_item" placeholder="작업 아이템 입력"/>
+</form>
+
 <table id="id_list_table">
 
 </table>
