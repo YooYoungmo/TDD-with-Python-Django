@@ -25,10 +25,10 @@ class NewVisitorTest(unittest.TestCase):
 
         # 그녀는 바로 작업을 추가하기로 한다
         inputbox = self.browser.find_element_by_id('id_new_item')
-        self.assertEqual(inputbox.get_attribute('placeholder'), '작업 아이템 입력')
+        self.assertEqual(inputbox.get_attribute('placeholder'), u'작업 아이템 입력')
 
         # "공작 깃털 사기"라고 텍스트 상자에 입력 한다
-        inputbox.send_keys('공작 깃털 사기')
+        inputbox.send_keys(u'공작 깃털 사기')
 
         # 엔터 키를 치면 페이지가 갱신되고 작업 목록에
         # "1: 공작깃털 사기 아이템이 추가 된다.
@@ -37,7 +37,7 @@ class NewVisitorTest(unittest.TestCase):
         table = self.browser.find_element_by_id('id_list_table')
         rows = table.find_element_by_tag_name('tr')
         self.assertTrue(
-                any(row.text == '1: 공작 깃털 사기' for row in rows)
+                any(row.text == '1: 공작 깃털 사기' for row in rows), '신규 작업이 테이블에 표시 되지 않는다'
         )
 
         # 추가 아이템을 입력할 수 있는 여분의 텍스트 상자가 존재한다.
