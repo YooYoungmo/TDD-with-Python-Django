@@ -19,7 +19,7 @@ class HomePageTest(TestCase):
 
         expected_html = render_to_string('home.html')
 
-        self.assertEqual(response.content.decode(), expected_html)
+        self.assertEqual(response.content.decode('utf-8'), expected_html)
 
     def test_home_page_can_save_a_POST_request(self):
         # given
@@ -32,3 +32,6 @@ class HomePageTest(TestCase):
 
         # then
         self.assertIn(u'신규 작업 아이템', response.content.decode('utf-8'))
+
+        expected_html = render_to_string('home.html', {'new_item_text': u'신규 작업 아이템'})
+        self.assertEqual(response.content.decode('utf-8'), expected_html)
