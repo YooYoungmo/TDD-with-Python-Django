@@ -34,7 +34,7 @@ class NewVisitorTest(LiveServerTestCase):
         # "1: 공작깃털 사기 아이템이 추가 된다.
         inputbox.send_keys(Keys.ENTER)
         edith_list_url = self.browser.current_url
-        self.assertRegexpMatches(edith_list_url, '/list/.+')
+        self.assertRegexpMatches(edith_list_url, '/lists/.+')
         self.check_for_row_in_list_table(u'1: 공작 깃털 사기')
 
         # 추가 아이템을 입력할 수 있는 여분의 텍스트 상자가 존재한다.
@@ -70,7 +70,7 @@ class NewVisitorTest(LiveServerTestCase):
 
         # 프란시스가 전용 URL을 취득 한다
         francis_list_url = self.browser.current_url
-        self.assertRegexpMatches(francis_list_url, '/list/.+')
+        self.assertRegexpMatches(francis_list_url, '/lists/.+')
         self.assertNotEqual(francis_list_url, edith_list_url)
 
         # 에디스가 입력한 흔적이 없다는 것을 다시 확인 한다
