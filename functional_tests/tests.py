@@ -43,6 +43,8 @@ class NewVisitorTest(LiveServerTestCase):
         inputbox.send_keys(u'공작 깃털을 이용하여 그물 만들기')
         inputbox.send_keys(Keys.ENTER)
 
+        time.sleep(3)
+
         # 페이지가 다시 갱신 되고, 두 개 아이템이 목록에 보인다.
         self.check_for_row_in_list_table(u'1: 공작 깃털 사기')
         self.check_for_row_in_list_table(u'2: 공작 깃털을 이용하여 그물 만들기')
