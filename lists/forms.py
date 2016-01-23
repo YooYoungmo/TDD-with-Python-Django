@@ -7,6 +7,7 @@ __author__ = 'yooyoung-mo'
 
 EMPTY_LIST_ERROR = "You can't have an empty list item"
 
+
 class ItemForm(forms.models.ModelForm):
     class Meta:
         model = Item
@@ -14,7 +15,8 @@ class ItemForm(forms.models.ModelForm):
         widgets = {
             'text': forms.fields.TextInput(attrs={
                 'placeholder': u'작업 아이템 입력',
-                'class': 'form-control input-lg'
+                'class': 'form-control input-lg',
+                'id': 'id_new_item'
             })
         }
         error_messages = {
