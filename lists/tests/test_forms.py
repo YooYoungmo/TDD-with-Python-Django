@@ -48,3 +48,20 @@ class ExistingListItemFormTest(TestCase):
         self.assertFalse(form.is_valid())
         self.assertEqual(form.errors['text'], [DUPLICATE_ITEM_ERROR])
 
+    def test_form_save(self):
+        list_ = List.objects.create()
+        form = ExistingListItemForm(for_list=list_, data={'text': 'hi'})
+        new_item = form.save()
+        self.assertEqual(new_item, Item.objects.all().first())
+
+
+class ItemFormAndExistingListItemForm(TestCase):
+    def test_from_items_order(self):
+        list_ = List.objects.create()
+        ItemForm(data={'text': u'우유 사기'}).save(for_list=list_)
+        ExistingListItemForm(for_list=list_, data={'text': u'tea 만들기'}).save()
+
+        actual = List.objects.get(id=list_.id)
+
+        self.assertEqual(actual.item_set.all()[0].text, u'우유 사기')
+        self.assertEqual(actual.item_set.all()[1].text, u'tea 만들기')
