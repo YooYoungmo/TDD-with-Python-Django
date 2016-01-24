@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>QUnit Example</title>
+    <link rel="stylesheet" href="qunit-1.20.0.css">
+</head>
+<body>
+<div id="qunit"></div>
+<div id="qunit-fixture">
+    <form>
+        <input name="text"/>
+        <div class="has-error">에러 텍스트</div>
+    </form>
+</div>
+
+<script src="http://code.jquery.com/jquery.min.js"></script>
+<script src="qunit-1.20.0.js"></script>
+<script src="../list.js"></script>
+<script>
+    QUnit.test("키 입력 시에 에러가 숨겨져야 한다", function(assert){
+        $('input').trigger('keypress');
+        assert.equal($('.has-error').is(':visible'), false)
+    });
+
+    QUnit.test("키 입력이 없으면 에러가 숨겨지지 않는다", function(assert){
+        assert.equal($('.has-error').is(':visible'), true)
+    });
+
+</script>
+</body>
+</html>
