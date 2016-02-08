@@ -84,7 +84,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.abspath(os.path.join(BASE_DIR, '../static'))
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static')
+    os.path.join(BASE_DIR, 'betterCode', 'static'),
 )
 
 TEMPLATE_DIRS = (os.path.join(BASE_DIR,  'templates'),)
