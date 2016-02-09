@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>QUnit Example</title>
+    <link rel="stylesheet" href="../../../betterCode/static/tests/qunit-1.20.0.css">
+</head>
+<body>
+<div id="qunit"></div>
+<div id="qunit-fixture">
+    <a id="id_login">로그인</a>
+</div>
+
+<script src="http://code.jquery.com/jquery.min.js"></script>
+<script src="../../../betterCode/static/tests/qunit-1.20.0.js"></script>
+<script src="../accounts.js"></script>
+<script>
+    QUnit.test('initalize binds sign in button to navigator.id.request', function(assert) {
+        var requestWasCalled = false;
+        var mockRequestFunction = function() { requestWasCalled = true; };
+        var mockNavigator = {
+            id: {
+                request: mockRequestFunction
+            }
+        };
+
+        Superlists.Accounts.initialize(mockNavigator);
+
+        assert.equal(requestWasCalled, false, '클릭 전에 request 가 호출되지 않는지 확인');
+        $('#id_login').trigger('click');
+        assert.equal(requestWasCalled, true, '클릭 후에 request 가 호출된 것을 확인');
+    });
+
+</script>
+</body>
+</html>
