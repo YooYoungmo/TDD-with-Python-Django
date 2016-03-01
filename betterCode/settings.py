@@ -28,7 +28,6 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
-
 INSTALLED_APPS = (
     #'django.contrib.admin',
     'django.contrib.auth',
@@ -53,6 +52,11 @@ MIDDLEWARE_CLASSES = (
 ROOT_URLCONF = 'betterCode.urls'
 
 WSGI_APPLICATION = 'betterCode.wsgi.application'
+
+AUTH_USER_MODEL = 'accounts.User'
+AUTHENTICATION_BACKENDS = (
+    'accounts.authentication.PersonaAuthenticationBackend',
+)
 
 
 # Database

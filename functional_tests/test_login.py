@@ -28,7 +28,7 @@ class LoginTest(FunctionalTest):
         self.switch_to_new_window('To-Do')
 
         # 로그인된 것을 알 수 있다
-        self.wait_for_element_with_id('logout')
+        self.wait_for_element_with_id('id_logout')
         navbar = self.browser.find_element_by_css_selector('.navbar')
         self.assertIn('ymyoo@mockmyid.com', navbar.text)
 
