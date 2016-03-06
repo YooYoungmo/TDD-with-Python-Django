@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
 import logging
 
+from django.conf import settings
 from django.contrib.auth import get_user_model
-
-__author__ = 'yooyoung-mo'
 import requests
+__author__ = 'yooyoung-mo'
 
 PERSONA_VERIFY_URL = 'https://verifier.login.persona.org/verify'
-DOMAIN = 'localhost'
-
 User = get_user_model()
 
 
@@ -20,7 +18,7 @@ class PersonaAuthenticationBackend:
         logging.warn('authenticate 함수 진입')
         response = requests.post(
                 PERSONA_VERIFY_URL,
-                data={'assertion': assertion, 'audience': DOMAIN})
+                data={'assertion': assertion, 'audience': settings.DOMAIN})
         logging.warn('퍼소나에서 응답 받음')
         logging.warn(response.content.decode())
         if response.ok and response.json()['status'] == 'okay':

@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from mock import patch
 
-from accounts.authentication import PersonaAuthenticationBackend, PERSONA_VERIFY_URL, DOMAIN
+from accounts.authentication import PersonaAuthenticationBackend, PERSONA_VERIFY_URL
 
 __author__ = 'yooyoung-mo'
 
@@ -22,7 +23,7 @@ class AuthenticationTest(TestCase):
         self.backend.authenticate('an assertion')
         mock_post.assert_called_once_with(
                 PERSONA_VERIFY_URL,
-                data={'assertion': 'an assertion', 'audience': DOMAIN}
+                data={'assertion': 'an assertion', 'audience': settings.DOMAIN}
         )
 
     def test_returns_none_if_response_errors(self, mock_post):
