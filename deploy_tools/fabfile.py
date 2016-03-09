@@ -6,6 +6,8 @@ from fabric.state import env
 __author__ = 'yooyoung-mo'
 
 REPO_URL = 'https://github.com/YooYoungmo/TDD-with-Python-Django.git'
+env.password = 'elspeth00'
+
 
 def _create_directory_structure_if_necessary(site_folder):
     for subfolder in ('database', 'static', 'virtualenv', 'source'):

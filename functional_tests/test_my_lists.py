@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 from django.conf import settings
-from django.contrib.auth import get_user_model, SESSION_KEY, BACKEND_SESSION_KEY
-from django.contrib.sessions.backends.db import SessionStore
+from django.contrib.auth import get_user_model
 
+from deploy_tools.server_tools import create_session_on_server
 from functional_tests.base import FunctionalTest
 from functional_tests.management.commands.create_session import create_pre_authenticated_session
-from functional_tests.server_tools import create_session_on_server
 
 __author__ = 'yooyoung-mo'
 

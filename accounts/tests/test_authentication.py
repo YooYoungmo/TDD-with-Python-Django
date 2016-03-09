@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import logging
+
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.test import TestCase
@@ -9,6 +11,7 @@ from accounts.authentication import PersonaAuthenticationBackend, PERSONA_VERIFY
 __author__ = 'yooyoung-mo'
 
 User = get_user_model()
+logger = logging.getLogger(__name__)
 
 
 @patch('accounts.authentication.requests.post')
