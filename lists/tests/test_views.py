@@ -1,10 +1,14 @@
 # -*- coding: utf-8 -*-
-from unittest import skip
+import unittest
+
+import django
+django.setup()
 
 from django.contrib.auth import get_user_model
 from django.http import HttpRequest
 from django.test import TestCase
 from django.utils.html import escape
+from mock import patch, Mock
 
 from lists.forms import ItemForm, EMPTY_LIST_ERROR, ExistingListItemForm
 from lists.models import Item, List
@@ -23,7 +27,59 @@ class HomePageTest(TestCase):
         self.assertIsInstance(response.context['form'], ItemForm)
 
 
-class NewListView(TestCase):
+@patch('lists.views.NewListForm')
+class NewListViewUnitTest(unittest.TestCase):
+    def setUp(self):
+        self.request = HttpRequest()
+        self.request.POST['text'] = u'신규 작업 아이템'
+        self.request.user = Mock()
+
+    def test_passes_POST_data_to_NewListForm(self, mockNewListForm):
+        new_list(self.request)
+        mockNewListForm.assert_called_once_with(data=self.request.POST)
+
+    def test_saves_form_with_owner_if_form_valid(self, mockNewListForm):
+        mock_form = mockNewListForm.return_value
+        mock_form.is_valid.return_value = True
+
+        new_list(self.request)
+
+        mock_form.save.assert_called_once_with(owner=self.request.user)
+
+    @patch('lists.views.redirect')
+    def test_redirects_to_form_returned_object_if_form_valid(self, mock_redirect, mockNewListForm):
+        mock_form = mockNewListForm.return_value
+        mock_form.is_valid.return_value = True
+
+        response = new_list(self.request)
+
+        self.assertEqual(response, mock_redirect.return_value)
+        mock_redirect.assert_called_once_with(mock_form.save.return_value)
+
+    @patch('lists.views.render')
+    def test_renders_home_template_with_form_if_form_invalid(self, mock_render, mockNewListForm):
+        mock_form = mockNewListForm.return_value
+        mock_form.is_valid.return_value = False
+
+        response = new_list(self.request)
+
+        self.assertEqual(response, mock_render.return_value)
+        mock_render.assert_called_once_with(
+            self.request, 'home.html', {'form': mock_form}
+        )
+
+    @patch('lists.views.redirect')
+    def test_redirects_to_form_returned_object_if_form_valid(self, mock_redirect, mockNewListForm):
+        mock_form = mockNewListForm.return_value
+        mock_form.is_valid.return_value = True
+
+        response = new_list(self.request)
+
+        self.assertEqual(response, mock_redirect.return_value)
+        mock_redirect.assert_called_once_with(mock_form.save.return_value)
+
+
+class NewListViewIntegratedTest(TestCase):
     def test_home_page_can_save_a_POST_request(self):
         # given, when
         self.client.post('/lists/new', data={'text': u'신규 작업 아이템'})
@@ -59,6 +115,16 @@ class NewListView(TestCase):
     def test_for_invalid_input_passes_form_to_template(self):
         response = self.client.post('/lists/new', data={'text': ''})
         self.assertIsInstance(response.context['form'], ItemForm)
+
+    def test_list_owner_is_saved_if_user_is_authenticated(self):
+        request = HttpRequest()
+        request.user = User.objects.create(email='a@b.com')
+        request.POST['text'] = 'new list item'
+
+        new_list(request)
+
+        list_ = List.objects.first()
+        self.assertEqual(list_.owner, request.user)
 
 
 class ListViewTest(TestCase):
@@ -157,6 +223,7 @@ class ListViewTest(TestCase):
 
 class MyListsTest(TestCase):
     def test_my_lists_url_renders_my_lists_template(self):
+        User.objects.create(email='a@b.com')
         response = self.client.get('/lists/users/a@b.com/')
         self.assertTemplateUsed(response, 'my_lists.html')
 
@@ -165,11 +232,3 @@ class MyListsTest(TestCase):
         correct_user = User.objects.create(email='a@b.com')
         response = self.client.get('/lists/users/a@b.com/')
         self.assertEqual(response.context['owner'], correct_user)
-
-    def test_list_owner_is_saved_if_user_is_authenticated(self):
-        request = HttpRequest()
-        request.user = User.objects.create(email='a@b.com')
-        request.POST['text'] = 'new list item'
-        new_list(request)
-        list_ = List.objects.first()
-        self.assertEqual(list_.owner, request.user)

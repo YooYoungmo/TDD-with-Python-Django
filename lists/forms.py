@@ -3,7 +3,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.forms.utils import ErrorList
 
-from lists.models import Item
+from lists.models import Item, List
 
 __author__ = 'yooyoung-mo'
 
@@ -12,10 +12,6 @@ DUPLICATE_ITEM_ERROR = u'이미 리스트에 해당 아이템이 있습니다'
 
 
 class ItemForm(forms.models.ModelForm):
-    def save(self, for_list, commit=True):
-        self.instance.list = for_list
-        return super(ItemForm, self).save(commit)
-
     class Meta:
         model = Item
         fields = ('text',)
@@ -29,6 +25,14 @@ class ItemForm(forms.models.ModelForm):
         error_messages = {
             'text': {'required': EMPTY_LIST_ERROR}
         }
+
+
+class NewListForm(ItemForm):
+    def save(self, owner):
+        if owner.is_authenticated():
+            return List.create_new(first_item_text=self.cleaned_data['text'], owner=owner)
+        else:
+            return List.create_new(first_item_text=self.cleaned_data['text'])
 
 
 class ExistingListItemForm(ItemForm):
@@ -45,5 +49,3 @@ class ExistingListItemForm(ItemForm):
             e.error_dict = {'text': [DUPLICATE_ITEM_ERROR]}
             self._update_errors(e)
 
-    def save(self):
-        return forms.models.ModelForm.save(self)
